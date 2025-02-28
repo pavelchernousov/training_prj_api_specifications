@@ -1,0 +1,16 @@
+@startuml
+participant "Менеджер (CRM)" as Manager
+participant "CRM" as CRM
+participant "Складская система" as Warehouse
+
+Manager -> CRM: Создать заказ
+CRM -> Warehouse: Запрос на резервирование товара
+Warehouse -> Warehouse: Проверка наличия товара
+alt Товар есть на складе
+    Warehouse -> CRM: Подтверждение резервирования
+    CRM -> Manager: Обновление статуса заказа (В резерве)
+else Товара нет
+    Warehouse -> CRM: Отказ в резервировании
+    CRM -> Manager: Уведомление о проблеме
+end
+@enduml
