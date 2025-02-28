@@ -98,4 +98,3 @@ Content-Type: application/json
 
 ---
 
-```
