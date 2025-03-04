@@ -1,0 +1,321 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://
+info:
+  description: This is a simple API
+  version: "1.0.0"
+  title: Simple Inventory API
+  contact:
+    email: you@your-company.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: visitor
+    description: Любой неавторизованный пользователь
+  - name: customer
+    description: Зарешистрированный пользователь
+  - name: manager
+    description: Сотрудник банка   
+
+    
+paths:
+  /products:
+    get:
+      tags:
+       - visitor
+       - customer
+       - manager
+      summary: Посмотреть перечень кредитных предложений
+      operationId: viewProductCatalog
+      description: Параметры фильтрации товаров в каталоге для поиска
+      parameters:
+        - in: query
+          name: id
+          description: название товара для поиска
+          required: true
+          schema:
+            type: string
+            format: uid
+            example: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+        - in: query
+          name: loanType
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: результаты поиска по запросу
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        '400':
+          description: не верные параметры фильтрации
+    post:
+      tags: 
+       - manager
+      summary: 'Добавить новый кредитный продукт'
+      operationId: addProductInCatalog
+      description: Название товара для катлога
+      responses:
+        '201':
+          description: item created
+        '400':
+          description: 'invalid input, object invalid'
+        '409':
+          description: an existing item already exists
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+        description: Inventory item to add
+
+  /products/{id}:
+    get:
+      tags: 
+       - visitor
+       - customer
+       - manager
+      summary: 'Просмотреть конкретный продукт по фильтру'
+      operationId: viewProduct
+      description: 'hhh'
+      parameters: 
+        - in: path
+          name: id
+          description: уникальный идентификатор
+          required: true
+          schema:
+            type: string
+            format: uid
+            example: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+      responses:
+        '200':
+          description: результаты поиска по запросу
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        '400':
+          description: не верные параметры фильтрации       
+    put:
+      tags: 
+       - manager
+      summary: 'Изменить конкретный продукт по фильтру'
+      operationId: updateProduct
+      description: 'sds'
+      parameters: 
+        - in: path
+          name: id
+          description: уникальный идентификатор
+          required: true
+          schema:
+            type: string
+            format: uid
+            example: 'd290f1ee-6c54-4b01-90e6-d701748f0851'      
+      responses:
+        '200':
+          description: резу
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        '400':
+          description: не верные параметры фильтрации            
+ 
+        
+      
+components:
+  schemas:
+    Product:
+      type: object
+      required:
+        - id
+        - loanType #Тип кредита (ипотека, авто, потребительский и т. д.)  string  Нет  mortgage
+        - minAmount  #Минимальная сумма кредита  float  Нет  100000
+        - maxAmount  #Максимальная сумма кредита  float  Нет  5000000
+        - minInterestRate  #Минимальная процентная ставка  float  Нет  5.0
+        - maxInterestRate  #Максимальная процентная ставка  float  Нет  15.0
+        - durationMonths  #Срок кредита в месяцах  integer  Нет  240
+        - collateral  #Требуется ли залог (true/false)  boolean  Нет  true
+        - guarantorRequired  #Требуется ли поручитель (true/false)  boolean  Нет  false
+      properties:
+        id:
+          type: string
+          format: uid
+          example: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+        loanType:
+          type: string
+          format: text
+          example: 'ипотека'
+        minAmount:
+          type: number
+          format: float
+          example: '100000'
+        maxAmount:
+          type: number
+          format: float
+          example: '5000000'
+        minInterestRate:
+          type: number
+          format: float
+          example: '5.0'
+        maxInterestRate:
+          type: number
+          format: float
+          example: '15.0'
+        durationMonths:
+          type: integer
+          format: int32
+          example: '240'
+        collateral:
+          type: integer
+          format: boolean
+          example: 'true'
+        guarantorRequired:
+          type: boolean
+          format: boolean
+          example: 'false'
+
+
+
+
+
+#components:
+#  schemas:
+#    InventoryItem:
+#      type: object
+#      required:
+#        - id
+#        - name
+#        - manufacturer
+#        - releaseDate
+#      properties:
+#        id:
+#          type: string
+#          format: uuid
+#          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+#        name:
+#          type: string
+#          example: Widget Adapter
+#        releaseDate:
+#          type: string
+#          format: date-time
+#          example: '2016-08-29T09:12:33.001Z'
+#        manufacturer:
+#          $ref: '#/components/schemas/Manufacturer'
+
+
+  
+# /application:
+  
+####################
+
+#  /inventory:
+ #   get:
+#      tags:
+#        - developers
+#      summary: searches inventory
+#      operationId: searchInventory
+#      description: |
+#        By passing in the appropriate options, you can search for
+#        available inventory in the system
+#      parameters:
+#        - in: query
+#          name: searchString
+#          description: pass an optional search string for looking up inventory
+#          required: false
+#          schema:
+#            type: string
+#        - in: query
+#          name: skip
+#          description: number of records to skip for pagination
+#          schema:
+#            type: integer
+#            format: int32
+#            minimum: 0
+#        - in: query
+#          name: limit
+#          description: maximum number of records to return
+#          schema:
+#            type: integer
+#            format: int32
+#            minimum: 0
+#            maximum: 50
+#      responses:
+#        '200':
+#          description: search results matching criteria
+#         content:
+#            application/json:
+#              schema:
+#                type: array
+#                items:
+#                  $ref: '#/components/schemas/InventoryItem'
+#        '400':
+#          description: bad input parameter
+#    post:
+#      tags:
+#        - admins
+#      summary: adds an inventory item
+#      operationId: addInventory
+#      description: Adds an item to the system
+#     responses:
+#        '201':
+#          description: item created
+#        '400':
+#          description: 'invalid input, object invalid'
+#        '409':
+#          description: an existing item already exists
+#      requestBody:
+#        content:
+#          application/json:
+#            schema:
+#              $ref: '#/components/schemas/InventoryItem'
+#        description: Inventory item to add
+#components:
+#  schemas:
+#    InventoryItem:
+#      type: object
+#      required:
+#        - id
+#        - name
+#        - manufacturer
+#        - releaseDate
+#      properties:
+#        id:
+#          type: string
+#          format: uuid
+#          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+#        name:
+#          type: string
+#          example: Widget Adapter
+#        releaseDate:
+#          type: string
+#          format: date-time
+#          example: '2016-08-29T09:12:33.001Z'
+#        manufacturer:
+#          $ref: '#/components/schemas/Manufacturer'
+#   Manufacturer:
+#      required:
+#        - name
+#      properties:
+#        name:
+#          type: string
+#          example: ACME Corporation
+#        homePage:
+#          type: string
+#          format: url
+#          example: 'https://www.acme-corp.com'
+#        phone:
+#          type: string
+#          example: 408-867-5309
+#      type: object
